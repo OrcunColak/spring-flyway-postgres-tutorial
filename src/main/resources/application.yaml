@@ -1,0 +1,30 @@
+spring:
+  application:
+    name:spring-flyway-postgres-tutorial
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db
+    username: postgres
+    password: postgres
+  
+  jpa:
+    show-sql: true
+    hibernate.ddl-auto: none
+  
+  
+  flyway:
+    enabled: true
+    # When set to `true`, tells Flyway to perform baseline migration if no previous migrations have been applied to the database.
+    # A baseline migration sets the baseline version for the database schema.
+    baselineOnMigrate: true
+    # When set to `true`, Flyway will validate the applied migrations against the available scripts to ensure they match.
+    # If a mismatch is found, the application startup will fail.
+    validateOnMigrate: true
+    locations: classpath:db/migration
+    postgresql:
+      transactional:
+        # See https://medium.com/@raminorujov/flyway-9-and-postgresql-15-upgrade-troubleshooting-story-00f503acaff2
+        # All transactions by default are running with global application level Postgres advisory lock
+        # using pg_try_advisory_xact_lock function and other sessions cannot acquire it until this lock is released(unlocked) by the owning process.
+        # we need to enable session level lock
+        lock: false
